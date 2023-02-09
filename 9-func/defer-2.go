@@ -7,13 +7,15 @@ import (
 
 func main() {
 
-	file, err := os.OpenFile("test.txt", os.O_RDWR, 0755)
+	f, err := os.OpenFile("test.txt", os.O_RDWR, 0755)
 	if err != nil {
 		log.Println(err)
 		return
 	}
+	f.pfd
+	f.
 
-	defer file.Close() // it guarantees that file would be closed when the function ends
+	defer f.Close() // it guarantees that file would be closed when the function ends
 
 	// do work with your file
 
