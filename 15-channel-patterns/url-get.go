@@ -32,17 +32,17 @@ func doGetRequest(urls []string) {
 	respChan := make(chan response, len(urls)) // buffered channel
 	//done := make(chan bool, len(urls))
 	count := 0
-
+	wgGet := &sync.WaitGroup{}
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
 		for _, v := range urls {
-			wg.Add(1)
+			wgGet.Add(1)
 
 			//fanning out go routines // one task = one goroutine
 			go func(url string) {
 
-				defer wg.Done()
+				defer wgGet.Done()
 
 				resp, err := http.Get(url)
 
@@ -58,15 +58,9 @@ func doGetRequest(urls []string) {
 			}(v)
 
 		}
-		for {
-			if count < len(url) {
-				continue
-			}
-			close(respChan)
-			// when channel is closed no more send can happen // only recv is possible
-
-		}
-
+		wgGet.Wait()
+		close(respChan)
+		// when channel is closed no more send can happen // only recv is possible
 		//close channel where send is happening and when send is over
 
 	}()

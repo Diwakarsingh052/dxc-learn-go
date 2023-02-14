@@ -44,7 +44,7 @@ func main() {
 	//fmt.Println(<-c2)
 	//fmt.Println(<-c3)
 
-	for {
+	for count != 3 {
 		select {
 		// whichever case is not blocking exec that first
 		//whichever case is ready first exec that.
@@ -57,7 +57,7 @@ func main() {
 		case <-done:
 			fmt.Println(count)
 			if count == 3 {
-				return
+				//check = !check
 			}
 		}
 	}
