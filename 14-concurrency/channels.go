@@ -5,6 +5,7 @@ import (
 	"sync"
 )
 
+// https://go.dev/ref/spec#Send_statements
 //A send on an unbuffered channel can proceed if a receiver is ready. send will block until there is no recv
 //channel -> unbuffered chan, buffered chan
 
