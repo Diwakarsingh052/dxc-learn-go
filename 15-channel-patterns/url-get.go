@@ -58,6 +58,7 @@ func doGetRequest(urls []string) {
 			}(v)
 
 		}
+		//waiting for go routines to finish the get request task
 		wgGet.Wait()
 		close(respChan)
 		// when channel is closed no more send can happen // only recv is possible
