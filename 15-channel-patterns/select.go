@@ -67,7 +67,7 @@ func main() {
 				fmt.Println(y)
 			case z := <-c3:
 				fmt.Println(z)
-			case <-done:
+			case <-done: // this case will exec when channel is closed
 				fmt.Println("it is closed")
 				return
 			}
