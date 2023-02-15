@@ -30,16 +30,18 @@ func main() {
 func doGetRequest(urls []string) {
 
 	respChan := make(chan response, len(urls)) // buffered channel
-	//done := make(chan bool, len(urls))
-	count := 0
 	wgGet := &sync.WaitGroup{}
+
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
 		for _, v := range urls {
-			wgGet.Add(1)
+
+			// keeping track of get requests that are going to start in the next line
+			//wgGet.Add(1)
 
 			//fanning out go routines // one task = one goroutine
+			wgGet.Add(1)
 			go func(url string) {
 
 				defer wgGet.Done()
@@ -54,7 +56,6 @@ func doGetRequest(urls []string) {
 
 				respChan <- r //sending the resp struct to respCh
 
-				count++
 			}(v)
 
 		}
@@ -62,13 +63,14 @@ func doGetRequest(urls []string) {
 		wgGet.Wait()
 		close(respChan)
 		// when channel is closed no more send can happen // only recv is possible
-		//close channel where send is happening and when send is over
 
 	}()
 
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
+
+		//range would stop when channel is closed
 		for r := range respChan { // recv over the channel until senders are sending values or channel is not closed
 
 			if r.err != nil {

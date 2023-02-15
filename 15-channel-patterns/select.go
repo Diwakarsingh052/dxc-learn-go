@@ -9,24 +9,35 @@ import (
 func main() {
 	var wg = &sync.WaitGroup{}
 
-	//wgChan keep track of if the go routine work is finished or not and we wil close the channel when work is done
-	var wgChan = &sync.WaitGroup{}
+	//wgWorker keep track of if the go routine work is finished or not and we wil close the channel when work is done
+	var wgWorker = &sync.WaitGroup{}
 	c1 := make(chan string, 1)
 	c2 := make(chan string, 1)
 	c3 := make(chan string, 1)
 	done := make(chan bool, 1)
 
-	wgChan.Add(3)
-	go func() {
-		defer wgChan.Done()
+	wgWorker.Add(3)
+	go func(a string) {
+		defer wgWorker.Done()
 
+		//v, err := strconv.Atoi(a)
+		//if err != nil {
+		//	log.Println(err)
+		//	return
+		//}
+		//c1 <- v
 		time.Sleep(3 * time.Second)
+
+		// doing some work
+		//err can happen
+		//return
+
 		c1 <- "one" // send
 
-	}()
+	}("101")
 
 	go func() {
-		defer wgChan.Done()
+		defer wgWorker.Done()
 
 		time.Sleep(1 * time.Second)
 		c2 <- "two"
@@ -34,7 +45,7 @@ func main() {
 	}()
 
 	go func() {
-		defer wgChan.Done()
+		defer wgWorker.Done()
 
 		c3 <- "three"
 
@@ -45,7 +56,7 @@ func main() {
 		defer wg.Done()
 
 		//waiting for go routines to finish
-		wgChan.Wait()
+		wgWorker.Wait()
 		fmt.Println("closing")
 		//closing the channel
 		close(done)
