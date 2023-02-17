@@ -19,6 +19,7 @@ func main() {
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 	defer cancel()
 
+	//https://api.github.com/user/repos
 	//NewRequestWithContext construct the request
 	req, err := http.NewRequestWithContext(ctx, http.MethodPost, "http://httpbin.org/post", bytes.NewReader(u))
 

@@ -1,0 +1,27 @@
+type Article {
+  article_id: String!
+  title: String!
+  content: String!
+  author_email: String!
+}
+
+type User {
+  id: ID!
+  name: String!
+  email: String!
+  bio: String
+}
+
+type Query {
+  articles: [Article]
+  following:[String!]
+  followers: [String!]
+}
+
+
+type Mutation {
+  createArticle(title: String!, content: String!): Article
+  followUser(email: String!): User!
+  signup(name: String!,email: String!, password: String!, bio:String!): User
+  login(email: String!, password: String!): String!
+}

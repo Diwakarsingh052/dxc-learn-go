@@ -28,6 +28,7 @@ func (m *Mid) Panic(next web.HandlerFunc) web.HandlerFunc {
 				log.Printf("%s :\n%s", v.TraceId, debug.Stack())
 			}
 		}()
+
 		return next(ctx, w, r)
 	}
 }

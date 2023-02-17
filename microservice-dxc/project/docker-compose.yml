@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+  graphql-service:
+    build:
+      #The context option specifies the location of the build context that will be sent to the Docker daemon.
+      context: ./../graphql-service
+      dockerfile: ../graphql-service/graphql-service.dockerfile #dockerfile location
+
+    restart: always
+    ports:
+      - "8080:8080"
+    links:
+      - postgres-graphql
+      #The links key allows the Go application to connect to the PostgresSQL database using the hostname postgres-graphql and the port 5432.
+
+
+  postgres-graphql:
+    image: 'postgres:15.1'
+    ports:
+      - "5433:5432"
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: users
+      POSTGRES_PORT: 5433
+    volumes:
+      - ./graphql-service/postgres/:/var/lib/postgresql/data/
