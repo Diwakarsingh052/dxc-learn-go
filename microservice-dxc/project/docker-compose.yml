@@ -1,12 +1,12 @@
 version: '3'
 
 services:
+
   graphql-service:
     build:
       #The context option specifies the location of the build context that will be sent to the Docker daemon.
-      context: ./../graphql-service
+      context: ./../graphql-service #go up one level to the parent directory, then go down into the directory named 'graphql-service'".
       dockerfile: ../graphql-service/graphql-service.dockerfile #dockerfile location
-
     restart: always
     ports:
       - "8080:8080"
@@ -15,11 +15,43 @@ services:
       #The links key allows the Go application to connect to the PostgresSQL database using the hostname postgres-graphql and the port 5432.
 
 
+  follower-service:
+    build:
+      context: ./../follower-service
+      dockerfile: ../follower-service/follower-service.dockerfile
+    restart: always
+    ports:
+      - "5000:5000"
+    links:
+      - redis-follower
+
+  article-service:
+    build:
+      context: ./../article-service
+      dockerfile: ../article-service/article-service.dockerfile
+    restart: always
+    links:
+      - postgres-article
+      - redis-event
+    ports:
+      - "8081:8080"
+
+  notification-service:
+    build:
+      context: ./../notification-service
+      dockerfile: ../notification-service/notification-service.dockerfile
+    restart: always
+    ports:
+      - "8082:8080"
+    links:
+      - redis-event
+
   postgres-graphql:
     image: 'postgres:15.1'
     ports:
-      - "5433:5432"
+      - "5433:5432" # docker not sure always listen to 5432 so map any external to 5433 to 5432
     restart: always
+
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
@@ -27,3 +59,31 @@ services:
       POSTGRES_PORT: 5433
     volumes:
       - ./graphql-service/postgres/:/var/lib/postgresql/data/
+
+  postgres-article:
+    image: 'postgres:15.1'
+    ports:
+      - "5434:5432" # anything outside the docker will have to use port 5433 which is mapped to port 5432
+    restart: always # restart the service if it fails
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: users
+    volumes: #setting the data directory in the project
+      - ./article-service/postgres/:/var/lib/postgresql/data/
+
+  redis-event:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+    command: redis-server
+    volumes: #setting the data directory in the project
+      - ./redis-event/redis/:/data
+
+  redis-follower:
+    image: redis:alpine
+    ports:
+      - "6378:6379"
+    command: redis-server
+    volumes: #setting the data directory in the project
+      - ./redis-follower/redis/:/data
