@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package proto;
 
-option go_package ="server/proto";
+option go_package = "server/proto";
 
 message Log {
   string name = 1;
@@ -10,7 +10,7 @@ message Log {
 }
 
 
-message WriteLogRequest { //Message name should be PascalCase
+message WriteLogRequest {//Message name should be PascalCase
   Log log_entry = 1; // field names should be lower_snake_case
 }
 
@@ -25,3 +25,15 @@ service LogService {
 //protoc --go_out=. --go_opt=paths=source_relative --go-grpc_out=. --go-grpc_opt=paths=source_relative log.proto
 //
 //go mod tidy to find and download unused dep
+
+service FooService {
+  rpc GetSomething(GetSomethingRequest) returns (GetSomethingResponse);
+}
+
+
+
+
+message GetSomethingRequest {
+  string result = 1;
+}
+message GetSomethingResponse{}

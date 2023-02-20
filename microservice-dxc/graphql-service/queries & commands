@@ -1,0 +1,66 @@
+mutation signup{
+  signup(name:"bob",email: "john@email.com", password: "abc",bio:"test bio") {
+    id
+    name
+    email
+    bio
+  }
+}
+
+mutation login {
+  login(email: "anup@email.com", password: "abc")
+}
+
+mutation createArticle {
+  createArticle(title:"test4ac",content:"content1003"){
+    article_id
+    author_email
+    title
+  }
+}
+
+mutation follow {
+  followUser(email:"diwakar@email.com") {
+    email
+
+  }
+}
+
+query getArticle {
+  articles {
+   title
+    author_email
+  }
+}
+query following {
+  following
+}
+
+query following{
+  followers
+}
+
+
+CREATE TABLE users (
+  id SERIAL,
+  name TEXT,
+  email TEXT UNIQUE,
+  bio VARCHAR(400),
+  password_hash VARCHAR(255),
+  date_created TIMESTAMP,
+  date_updated TIMESTAMP
+);
+
+CREATE TABLE articles (
+  author_email varchar(100) ,
+  article_id serial,
+  title varchar(10000),
+  content varchar(10000)
+);
+
+
+openssl genpkey -algorithm RSA -out private.pem -pkeyopt rsa_keygen_bits:2048
+openssl rsa -in private.pem -pubout -out pubkey.pem
+
+
+protoc --go_out=. --go_opt=paths=source_relative --go-grpc_out=. --go-grpc_opt=paths=source_relative follower.proto

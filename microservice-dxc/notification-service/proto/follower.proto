@@ -1,0 +1,54 @@
+syntax = "proto3";
+
+package proto;
+
+option go_package = "notification-service/proto";
+
+//    Defining A Message Type
+message UserDetails {//type names : PascalCase
+  string  user_email  = 1; //field names : lower_snake_case
+  string target_user_email = 2;
+}
+
+message FollowUserRequest {
+  UserDetails user = 1;
+}
+
+message FollowUserResponse {
+  string result = 1;
+}
+
+
+// graphql-service would send who is current logged-in user to check the list of the following
+message Following {
+  string email = 1;
+}
+
+message ListFollowingRequest{
+  Following email = 1;
+}
+
+message ListFollowingResponse{
+  repeated string following_list = 1;
+}
+
+// graphql-service would send who is current logged-in user to check the list of the folllowers
+message Follower {
+  string email = 1;
+}
+
+message ListFollowersRequest{
+  Follower email = 1;
+}
+message ListFollowersResponse{
+  repeated string followers = 1;
+}
+
+
+
+
+service FollowUserService {
+  rpc FollowUser(FollowUserRequest) returns (FollowUserResponse);
+  rpc ListFollowing(ListFollowingRequest) returns (ListFollowingResponse);
+  rpc ListFollowers(ListFollowersRequest) returns (ListFollowersResponse);
+}

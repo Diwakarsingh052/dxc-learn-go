@@ -1,0 +1,21 @@
+CREATE TABLE articles (
+  author_email varchar(100) ,
+  article_id serial,
+  title varchar(10000),
+  content varchar(10000)
+
+
+);
+
+
+CREATE TABLE users (
+  id SERIAL,
+  name TEXT,
+  email TEXT UNIQUE,
+  bio VARCHAR(400),
+  password_hash VARCHAR(255),
+  date_created TIMESTAMP,
+  date_updated TIMESTAMP
+
+
+);

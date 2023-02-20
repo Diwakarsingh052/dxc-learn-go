@@ -1,0 +1,74 @@
+syntax = "proto3";
+
+package proto;
+
+option go_package = "graphql-service/proto";
+
+// Defining A Message Type
+// type names : PascalCase
+// field names : lower_snake_case
+message UserDetails {
+  string  user_email  = 1;
+  string target_user_email = 2;
+}
+
+//FollowUserRequest is message that we would use in rpc as an argument ,
+message FollowUserRequest {
+  UserDetails user = 1;
+}
+
+//FollowUserResponse is the return type for the rpc endpoint
+message FollowUserResponse {
+  string result = 1;
+}
+
+message Follower {
+  string email = 1;
+}
+message ListFollowersRequest{
+  Follower email = 1;
+}
+message ListFollowersResponse{
+  repeated string followers = 1;
+}
+
+message Following {
+  string email = 1;
+}
+message ListFollowingRequest{
+  Following email = 1;
+}
+message ListFollowingResponse{
+  repeated string following_list = 1;
+}
+
+//defining remote services
+
+service FollowUserService {
+  rpc FollowUser(FollowUserRequest) returns (FollowUserResponse);
+  rpc ListFollowers(ListFollowersRequest) returns (ListFollowersResponse);
+  rpc ListFollowing(ListFollowingRequest) returns (ListFollowingResponse);
+}
+
+/*
+    Notes:-
+
+    - The first line of the file specifies that you're using proto3 syntax:
+    if you don't do this the protocol buffer compiler will assume you are using proto2.
+
+
+
+    Assigning Field Numbers
+    - As you can see, each field in the message definition has a unique number.
+    These field numbers are used to identify your fields in the message binary format, and should not be changed
+    once your message type is in use.
+
+    - The smallest field number you can specify is 1, and the largest is 536,870,911.
+
+    - You also cannot use the numbers 19000 through 19999, as they are reserved for the Protocol Buffers implementation
+
+    - For Go, the compiler generates a .pb.go file with a type for each message type in your file
+
+    - Scalar Types :- https://ibb.co/2tN5rpK
+
+    */
